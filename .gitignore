@@ -1,0 +1,45 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+
+# IDE / tooling
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment and secrets (never commit)
+.env
+.env.local
+*.pem
+
+# Selenium / drivers (if you vendor downloads)
+drivers/
+
+# Build / distribution
+dist/
+build/
+*.egg-info/
