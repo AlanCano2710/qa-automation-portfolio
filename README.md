@@ -1,5 +1,7 @@
 # QA Automation Portfolio
 
+[![Python Pytest CI](https://github.com/AlanCano2710/qa-automation-portfolio/actions/workflows/pytest.yml/badge.svg)](https://github.com/AlanCano2710/qa-automation-portfolio/actions/workflows/pytest.yml)
+
 ## Project description
 
 This repository is a **portfolio-grade UI test automation** project. It demonstrates end-to-end browser testing with **Selenium**, organized using the **Page Object Model (POM)** so locators and user actions stay separate from test assertions. Tests target public demo sites (for example [SauceDemo](https://www.saucedemo.com)) and configurable base URLs for smoke and regression scenarios.
