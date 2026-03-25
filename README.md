@@ -113,4 +113,4 @@ pytest -m smoke
 
 ## License
 
-Use this portfolio project as you see fit for learning and interviews.
+Use this portfolio project as you see fit for learning.
