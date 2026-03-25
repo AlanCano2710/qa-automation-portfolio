@@ -9,6 +9,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 
 from pages.base_page import BasePage
+from src.config import default_explicit_wait_seconds
 
 
 class SauceDemoLoginPage(BasePage):
@@ -93,7 +94,10 @@ class SauceDemoLoginPage(BasePage):
     def logout(self) -> None:
         """Log out from the inventory menu."""
         self.wait_clickable(self.MENU_BUTTON).click()
-        logout_link = self.wait_visible(self.LOGOUT_LINK, timeout=15)
+        # Extra margin for headless CI: menu animation + sidebar link render
+        logout_link = self.wait_visible(
+            self.LOGOUT_LINK, timeout=max(default_explicit_wait_seconds(), 25.0)
+        )
         self.driver.execute_script("arguments[0].click();", logout_link)
 
     def is_login_page_loaded(self) -> bool:
@@ -103,4 +107,6 @@ class SauceDemoLoginPage(BasePage):
             has_login_button = len(driver.find_elements(*self.LOGIN_BUTTON)) > 0
             return has_username and has_login_button and "inventory" not in driver.current_url
 
-        return bool(WebDriverWait(self.driver, 20).until(login_form_is_ready))
+        # Post-logout navigation can be slower on shared runners
+        post_logout_wait = max(default_explicit_wait_seconds() + 15.0, 35.0)
+        return bool(WebDriverWait(self.driver, post_logout_wait).until(login_form_is_ready))

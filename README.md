@@ -97,7 +97,7 @@ A GitHub Actions workflow runs the same pytest suite in the cloud **without manu
 | **Name** | Python Pytest CI |
 | **Triggers** | Every **push** to any branch and every **pull_request** |
 | **Runner** | `ubuntu-latest` |
-| **Steps (summary)** | Checkout code → install Python 3.11 (with pip cache) → install Chrome → `pip install -r requirements.txt` → run `pytest -v` with `HEADLESS=true` → upload `reports/` as artifact `pytest-reports` (runs even if tests fail, so HTML report and screenshots are available for debugging) |
+| **Steps (summary)** | Checkout code → install Python 3.11 (with pip cache) → install Chrome → `pip install -r requirements.txt` → run `pytest -v` with `HEADLESS=true` (GitHub sets `CI=true`, which raises Selenium timeouts in `src/config.py`) → upload `reports/` as artifact `pytest-reports` (runs even if tests fail, so HTML report and screenshots are available for debugging) |
 
 To view results: open the **Actions** tab on GitHub, select the workflow run, then download the **pytest-reports** artifact if you need the generated HTML and screenshot files.
 
@@ -120,8 +120,9 @@ To view results: open the **Actions** tab on GitHub, select the workflow run, th
 |----------|-------------|---------|
 | `BASE_URL` | Application under test | `https://example.com` |
 | `BROWSER` | `chrome`, `firefox`, or `edge` | `chrome` |
-| `IMPLICIT_WAIT` | Implicit wait (seconds) | `10` |
-| `PAGE_LOAD_TIMEOUT` | Page load timeout (seconds) | `30` |
+| `IMPLICIT_WAIT` | Implicit wait (seconds) | `15` locally; `20` when `CI=true` |
+| `PAGE_LOAD_TIMEOUT` | Page load timeout (seconds) | `60` locally; `90` when `CI=true` |
+| `EXPLICIT_WAIT` | `WebDriverWait` default in page objects (seconds) | `20` locally; `25` when `CI=true` |
 | `HEADLESS` | `true` / `false` | `false` |
 | `WINDOW_WIDTH` | Browser width (pixels) | `1280` |
 | `WINDOW_HEIGHT` | Browser height (pixels) | `720` |

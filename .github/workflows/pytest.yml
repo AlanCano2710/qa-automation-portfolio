@@ -28,6 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # GitHub sets CI=true; src/config.py applies longer Selenium timeouts in CI
       - name: Run pytest
         env:
           HEADLESS: "true"

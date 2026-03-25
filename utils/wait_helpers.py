@@ -9,12 +9,18 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from src.config import default_explicit_wait_seconds
 
-def wait_for_url_contains(driver: WebDriver, fragment: str, timeout: float = 10) -> None:
+
+def wait_for_url_contains(
+    driver: WebDriver, fragment: str, timeout: float | None = None
+) -> None:
     """Assert URL contains a substring after navigation or redirect."""
-    WebDriverWait(driver, timeout).until(lambda d: fragment in d.current_url)
+    wait = timeout if timeout is not None else default_explicit_wait_seconds()
+    WebDriverWait(driver, wait).until(lambda d: fragment in d.current_url)
 
 
-def wait_stale(element: WebElement, driver: WebDriver, timeout: float = 10) -> None:
+def wait_stale(element: WebElement, driver: WebDriver, timeout: float | None = None) -> None:
     """Wait until a reference to an element goes stale (DOM replaced)."""
-    WebDriverWait(driver, timeout).until(EC.staleness_of(element))
+    wait = timeout if timeout is not None else default_explicit_wait_seconds()
+    WebDriverWait(driver, wait).until(EC.staleness_of(element))

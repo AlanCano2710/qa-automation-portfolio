@@ -28,8 +28,11 @@ def build_driver(settings: Settings) -> WebDriver:
         options = webdriver.ChromeOptions()
         if settings.headless:
             options.add_argument("--headless=new")
+        # Shared-memory stability on Linux CI / Docker (GitHub Actions)
+        options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
+        options.add_argument("--disable-extensions")
         options.add_argument(f"--window-size={settings.window_width},{settings.window_height}")
         service = ChromeService(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
@@ -45,7 +48,10 @@ def build_driver(settings: Settings) -> WebDriver:
         options = webdriver.EdgeOptions()
         if settings.headless:
             options.add_argument("--headless=new")
+        options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument(f"--window-size={settings.window_width},{settings.window_height}")
         service = EdgeService(EdgeChromiumDriverManager().install())
         driver = webdriver.Edge(service=service, options=options)
 
