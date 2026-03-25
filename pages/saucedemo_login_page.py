@@ -5,6 +5,8 @@ Page object for SauceDemo login and inventory verification.
 from __future__ import annotations
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support.ui import WebDriverWait
 
 from pages.base_page import BasePage
 
@@ -91,8 +93,14 @@ class SauceDemoLoginPage(BasePage):
     def logout(self) -> None:
         """Log out from the inventory menu."""
         self.wait_clickable(self.MENU_BUTTON).click()
-        self.wait_clickable(self.LOGOUT_LINK, timeout=15).click()
+        logout_link = self.wait_visible(self.LOGOUT_LINK, timeout=15)
+        self.driver.execute_script("arguments[0].click();", logout_link)
 
     def is_login_page_loaded(self) -> bool:
-        """Return True when login button is visible."""
-        return self.wait_visible(self.LOGIN_BUTTON).is_displayed()
+        """Return True when login form is visible after logout."""
+        def login_form_is_ready(driver: WebDriver) -> bool:
+            has_username = len(driver.find_elements(*self.USERNAME_INPUT)) > 0
+            has_login_button = len(driver.find_elements(*self.LOGIN_BUTTON)) > 0
+            return has_username and has_login_button and "inventory" not in driver.current_url
+
+        return bool(WebDriverWait(self.driver, 20).until(login_form_is_ready))

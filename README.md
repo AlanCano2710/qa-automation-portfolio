@@ -6,6 +6,7 @@ Professional **Python** test automation using **pytest** and **Selenium** with a
 
 - **pytest** for discovery, fixtures, markers, and reporting
 - **Selenium 4** WebDriver with **webdriver-manager** (drivers aligned to your installed browser)
+- **pytest-html** for single-file HTML execution reports
 - Clear separation: **`src/`** (config), **`pages/`** (UI abstraction), **`utils/`** (drivers and helpers), **`tests/`** (specs)
 - Environment-based configuration (no secrets in code)
 
@@ -46,10 +47,22 @@ pip install -r requirements.txt
 pytest
 ```
 
+By default, each run also generates an HTML report at:
+
+```text
+reports/report.html
+```
+
 Run only smoke tests:
 
 ```bash
 pytest -m smoke
+```
+
+Generate a custom-named HTML report:
+
+```bash
+pytest --html=reports/smoke_report.html --self-contained-html -m smoke
 ```
 
 List tests without executing:
@@ -68,6 +81,7 @@ pytest --collect-only
 | `tests/` | Test modules and `conftest.py` (fixtures) |
 | `pytest.ini` | Pytest defaults, markers, `pythonpath` |
 | `requirements.txt` | Pinned dependency stack |
+| `reports/` | Generated artifacts: HTML reports and failure screenshots |
 
 ## Configuration
 
@@ -110,6 +124,7 @@ pytest -m smoke
 - **Driver / browser mismatch** — `webdriver-manager` downloads a matching driver; ensure the browser is installed and up to date.
 - **Import errors** — Run pytest from the project root so `pytest.ini` `pythonpath = .` applies.
 - **Flaky tests** — Increase explicit wait timeouts on slow environments; avoid sharing one browser across parallel tests without isolation strategy.
+- **HTML report not generated** — Ensure dependencies are installed: `pip install -r requirements.txt`, then run `pytest` from project root.
 
 ## License
 
