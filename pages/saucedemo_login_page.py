@@ -27,6 +27,8 @@ class SauceDemoLoginPage(BasePage):
     CART_LINK = (By.CLASS_NAME, "shopping_cart_link")
     CART_ITEM_NAME = (By.CLASS_NAME, "inventory_item_name")
     CHECKOUT_BUTTON = (By.ID, "checkout")
+    CHECKOUT_INFO_CONTAINER = (By.ID, "checkout_info_container")
+    CHECKOUT_INFO_TITLE = (By.CSS_SELECTOR, "[data-test='title']")
     FIRST_NAME_INPUT = (By.ID, "first-name")
     LAST_NAME_INPUT = (By.ID, "last-name")
     POSTAL_CODE_INPUT = (By.ID, "postal-code")
@@ -73,11 +75,22 @@ class SauceDemoLoginPage(BasePage):
     def start_checkout(self) -> None:
         """Start checkout from cart page."""
         self.wait_clickable(self.CHECKOUT_BUTTON).click()
+        self.wait_for_checkout_information_page()
+
+    def wait_for_checkout_information_page(self) -> None:
+        """Wait until checkout information page is fully rendered."""
+        # CI/headless runners can render form fields before container transitions finish.
+        wait = max(default_explicit_wait_seconds(), 25.0)
+        self.wait_visible(self.CHECKOUT_INFO_CONTAINER, timeout=wait)
+        title = self.wait_visible(self.CHECKOUT_INFO_TITLE, timeout=wait).text.strip()
+        if title != "Checkout: Your Information":
+            raise AssertionError(f"Unexpected checkout title: {title}")
 
     def fill_checkout_information(
         self, first_name: str, last_name: str, postal_code: str
     ) -> None:
         """Fill checkout customer information and continue."""
+        self.wait_for_checkout_information_page()
         self.wait_visible(self.FIRST_NAME_INPUT).send_keys(first_name)
         self.wait_visible(self.LAST_NAME_INPUT).send_keys(last_name)
         self.wait_visible(self.POSTAL_CODE_INPUT).send_keys(postal_code)
