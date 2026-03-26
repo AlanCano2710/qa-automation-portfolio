@@ -2,6 +2,7 @@
 selenium>=4.15.0
 pytest>=7.4.0
 pytest-html>=4.1.0
+pytest-rerunfailures>=14.0
 
 # WebDriver management (auto-download matching browser drivers)
 webdriver-manager>=4.0.0
